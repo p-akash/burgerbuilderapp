@@ -3,7 +3,7 @@ import classes from "./NevigationItems.module.css";
 import NevigationItem from "./NevigationItem/NevigationItem";
 const nevigationItems = props => {
   return (
-    <ul className={classes.NevigationItems}>
+    <ul className={classes.NavigationItems}>
       <NevigationItem link="/" active>
         Burger Builder
       </NevigationItem>
