@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/Buildcontrols";
+import Modal from "../../components/UI/Modal/Modal";
+import OrderSummary from "../../components/Burger/OrderSummary";
 const INGREDIENT_PRICES = {
   salad: 0.4,
   bacon: 0.5,
@@ -15,7 +17,28 @@ class BurgerBuilder extends Component {
       cheese: 0,
       meat: 0
     },
-    totalPrice: 4
+    totalPrice: 4,
+    purchasable: false,
+    purchasing: false
+  };
+  updatePurchaseState(ingredients) {
+    const sum = Object.keys(ingredients)
+      .map(igkey => {
+        //console.log(ingredients[igkey]);
+        return ingredients[igkey];
+      })
+      .reduce((sum, el) => {
+        console.log(sum + el);
+        return sum + el;
+      }, 0);
+    //console.log(sum > 0);
+    this.setState({ purchasable: sum > 0 });
+  }
+  purchasingHandler = () => {
+    this.setState({ purchasing: true });
+  };
+  purchasCancaleHandler = () => {
+    this.setState({ purchasing: false });
   };
   addIngredientsHandler = type => {
     const updatedCount = this.state.ingredients[type] + 1;
@@ -26,6 +49,7 @@ class BurgerBuilder extends Component {
       ingredients: updatedIngredients,
       totalPrice: newTotalPrice
     });
+    this.updatePurchaseState(updatedIngredients);
   };
   removeIngredientsHandler = type => {
     const oldCount = this.state.ingredients[type];
@@ -40,6 +64,7 @@ class BurgerBuilder extends Component {
       ingredients: updatedIngredients,
       totalPrice: newTotalPrice
     });
+    this.updatePurchaseState(updatedIngredients);
   };
   render() {
     const disabledInfo = {
@@ -50,12 +75,20 @@ class BurgerBuilder extends Component {
     }
     return (
       <React.Fragment>
+        <Modal
+          show={this.state.purchasing}
+          modalClosed={this.purchasCancaleHandler}
+        >
+          <OrderSummary ingredients={this.state.ingredients} />
+        </Modal>
         <Burger ingredients={this.state.ingredients} />
         <BuildControls
           addIngredients={this.addIngredientsHandler}
           removeIngredients={this.removeIngredientsHandler}
           totalPrice={this.state.totalPrice}
+          purchasable={this.state.purchasable}
           disabled={disabledInfo}
+          Ordered={this.purchasingHandler}
         />
       </React.Fragment>
     );
