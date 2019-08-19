@@ -8,9 +8,14 @@ const Layout = props => {
   const sideDrawerClosedHandler = () => {
     setdrawer({ showSideDrawer: false });
   };
+  const sideDrawerToggleHandler = () => {
+    setdrawer(prevState => {
+      return { showSideDrawer: !prevState.showSideDrawer };
+    });
+  };
   return (
     <React.Fragment>
-      <Toolbar />
+      <Toolbar DrawerToggleClicked={sideDrawerToggleHandler} />
       <SlideDrawer
         open={drawer.showSideDrawer}
         closed={sideDrawerClosedHandler}
